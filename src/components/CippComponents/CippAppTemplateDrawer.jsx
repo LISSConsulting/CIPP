@@ -399,6 +399,7 @@ export const CippAppTemplateDrawer = ({
                   { value: 'huntress', label: 'Huntress' },
                   { value: 'automate', label: 'CW Automate' },
                   { value: 'cwcommand', label: 'CW Command' },
+                  { value: 'ncentral', label: 'N-central (LISSTech Agent Controller)' },
                 ]}
                 formControl={formControl}
                 multiple={false}

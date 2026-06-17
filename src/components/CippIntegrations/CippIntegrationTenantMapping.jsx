@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Grid } from "@mui/system";
 import { useState, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { ApiGetCall, ApiPostCall } from "../../api/ApiCall";
 import { useRouter } from "next/router";
 import extensions from "../../data/Extensions.json";
@@ -45,6 +45,11 @@ const CippIntegrationSettings = ({ children }) => {
   const formControl = useForm({
     mode: "onChange",
     defaultValues: mappings?.data,
+  });
+
+  const selectedCompany = useWatch({
+    control: formControl.control,
+    name: "integrationCompany",
   });
 
   const automapPostCall = ApiPostCall({
@@ -81,8 +86,10 @@ const CippIntegrationSettings = ({ children }) => {
   const handleAddItem = () => {
     const selectedTenant = formControl.getValues("tenantFilter");
     const selectedCompany = formControl.getValues("integrationCompany");
+    const slug = formControl.getValues("slug") || selectedCompany?.slug || selectedCompany?.addedFields?.slug;
     if (!selectedTenant || !selectedCompany) return;
     if (tableData?.find((item) => item.TenantId === selectedTenant.addedFields.customerId)) return;
+    if (extension?.id === "NCentral" && !slug) return;
 
     const newRowData = {
       TenantId: selectedTenant.value,
@@ -92,11 +99,21 @@ const CippIntegrationSettings = ({ children }) => {
       TenantDomain: selectedTenant.addedFields.defaultDomainName,
     };
 
+    if (extension?.id === "NCentral") {
+      newRowData.TargetType = selectedCompany?.targetType || selectedCompany?.addedFields?.targetType;
+      newRowData.ParentCustomerId =
+        selectedCompany?.parentCustomerId || selectedCompany?.addedFields?.parentCustomerId || "";
+      newRowData.Slug = slug;
+      newRowData.Channel = formControl.getValues("channel") || "ga";
+    }
+
     setTableData([...tableData, newRowData]);
 
     // Clear the form fields after successfully adding the mapping
     formControl.setValue("tenantFilter", null);
     formControl.setValue("integrationCompany", null);
+    formControl.setValue("slug", "");
+    formControl.setValue("channel", "ga");
   };
 
   const handleAutoMap = () => {
@@ -155,6 +172,13 @@ const CippIntegrationSettings = ({ children }) => {
     }
   }, [mappings.isSuccess]);
 
+  useEffect(() => {
+    if (extension?.id === "NCentral" && selectedCompany?.slug) {
+      formControl.setValue("slug", selectedCompany.slug);
+      formControl.setValue("channel", "ga");
+    }
+  }, [extension?.id, formControl, selectedCompany]);
+
   return (
     <>
       {mappings.isSuccess && extension ? (
@@ -201,6 +225,9 @@ const CippIntegrationSettings = ({ children }) => {
                     return {
                       label: company.name,
                       value: company.value,
+                      targetType: company.targetType,
+                      parentCustomerId: company.parentCustomerId,
+                      slug: company.slug,
                     };
                   })}
                   creatable={false}
@@ -209,6 +236,30 @@ const CippIntegrationSettings = ({ children }) => {
                   sortOptions={true}
                 />
               </Grid>
+              {extension.id === "NCentral" && (
+                <>
+                  <Grid size={{ md: 3, xs: 12 }}>
+                    <CippFormComponent
+                      type="textField"
+                      fullWidth
+                      name="slug"
+                      formControl={formControl}
+                      label="Agent Controller Slug"
+                      placeholder="Auto-filled from selected N-central target"
+                    />
+                  </Grid>
+                  <Grid size={{ md: 2, xs: 12 }}>
+                    <CippFormComponent
+                      type="textField"
+                      fullWidth
+                      name="channel"
+                      formControl={formControl}
+                      label="Channel"
+                      placeholder="ga"
+                    />
+                  </Grid>
+                </>
+              )}
               <Grid>
                 <Stack direction={"row"} spacing={1}>
                   <Tooltip title="Add Mapping">

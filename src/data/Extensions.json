@@ -512,6 +512,119 @@
     "showSyncButton": true
   },
   {
+    "name": "N-central",
+    "id": "NCentral",
+    "type": "NCentral",
+    "cat": "Documentation & Monitoring",
+    "logo": "/assets/integrations/cipp-api.png",
+    "forceSyncButton": false,
+    "description": "Enable N-central tenant mapping for LISSTech Agent Controller Intune deployment.",
+    "helpText": "This integration maps Microsoft 365 tenants to N-central customers or sites and stores the Agent Controller slug used by Intune deployment detection.",
+    "links": [
+      {
+        "name": "N-central API Documentation",
+        "url": "https://documentation.n-able.com/N-central/userguide/Content/API_Level_Integration/API_Integration_Introduction.html"
+      }
+    ],
+    "SettingOptions": [
+      {
+        "type": "switch",
+        "name": "NCentral.Enabled",
+        "label": "Enable Integration"
+      },
+      {
+        "type": "textField",
+        "name": "NCentral.ServerAddress",
+        "label": "N-central server address",
+        "placeholder": "n-central.example.com",
+        "required": true,
+        "condition": {
+          "field": "NCentral.Enabled",
+          "compareType": "is",
+          "compareValue": true,
+          "action": "disable"
+        }
+      },
+      {
+        "type": "password",
+        "name": "NCentral.APIKey",
+        "label": "N-central JWT",
+        "placeholder": "Enter your N-central API JWT",
+        "required": true,
+        "condition": {
+          "field": "NCentral.Enabled",
+          "compareType": "is",
+          "compareValue": true,
+          "action": "disable"
+        }
+      },
+      {
+        "type": "textField",
+        "name": "NCentral.BootstrapUrl",
+        "label": "Public generic bootstrap URL",
+        "placeholder": "https://s3.example.com/bucket/agentcontroller/latest/LISSTech.AgentController.Generic.msi",
+        "required": true,
+        "condition": {
+          "field": "NCentral.Enabled",
+          "compareType": "is",
+          "compareValue": true,
+          "action": "disable"
+        }
+      },
+      {
+        "type": "textField",
+        "name": "NCentral.AgentCtlOrigin",
+        "label": "Agent Controller artifact origin",
+        "placeholder": "https://s3.example.com/bucket",
+        "required": true,
+        "condition": {
+          "field": "NCentral.Enabled",
+          "compareType": "is",
+          "compareValue": true,
+          "action": "disable"
+        }
+      },
+      {
+        "type": "textField",
+        "name": "NCentral.AgentDownloadUri",
+        "label": "N-central Windows agent download URL",
+        "placeholder": "https://n-central.example.com/download/current/winnt/N-central/WindowsAgentSetup.exe",
+        "required": true,
+        "condition": {
+          "field": "NCentral.Enabled",
+          "compareType": "is",
+          "compareValue": true,
+          "action": "disable"
+        }
+      },
+      {
+        "type": "textField",
+        "name": "NCentral.SyslogUri",
+        "label": "Syslog URI",
+        "placeholder": "udp://syslog.example.com:514",
+        "condition": {
+          "field": "NCentral.Enabled",
+          "compareType": "is",
+          "compareValue": true,
+          "action": "disable"
+        }
+      },
+      {
+        "type": "textField",
+        "name": "NCentral.MinVersion",
+        "label": "Minimum N-central agent version",
+        "placeholder": "2025.4.0.16",
+        "condition": {
+          "field": "NCentral.Enabled",
+          "compareType": "is",
+          "compareValue": true,
+          "action": "disable"
+        }
+      }
+    ],
+    "mappingRequired": true
+  },
+  {
     "name": "Hudu",
     "id": "Hudu",
     "type": "Hudu",

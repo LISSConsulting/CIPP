@@ -208,6 +208,11 @@ export const CippApplicationDeployDrawer = ({
                     label: 'CW Command',
                     isSponsor: false,
                   },
+                  {
+                    value: 'ncentral',
+                    label: 'N-central (LISSTech Agent Controller)',
+                    isSponsor: false,
+                  },
                 ]}
                 formControl={formControl}
                 multiple={false}
@@ -373,6 +378,22 @@ export const CippApplicationDeployDrawer = ({
                   />
                 </Grid>
               ))}
+            </CippFormCondition>
+
+            {/* For "ncentral" */}
+            <CippFormCondition
+              formControl={formControl}
+              field="rmmname.value"
+              compareType="is"
+              compareValue="ncentral"
+            >
+              <Grid size={{ xs: 12 }}>
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  N-central deployments use the N-central integration mapping to resolve each
+                  selected tenant to an N-central customer or site and Agent Controller slug. Any
+                  tenant without a mapping will be blocked by the API.
+                </Alert>
+              </Grid>
             </CippFormCondition>
 
             {/* Assign To Options */}
