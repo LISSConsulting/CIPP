@@ -1,0 +1,44 @@
+# syntax=docker/dockerfile:1
+ARG CIPP_BASE_IMAGE=ghcr.io/cyberdrain/cipp:latest
+FROM ${CIPP_BASE_IMAGE} AS official
+
+FROM alpine:3.22 AS filesystem
+RUN --mount=from=official,target=/official \
+    mkdir -p /rootfs && \
+    cp -a /official/. /rootfs/ && \
+    rm -rf /rootfs/app/Frontend/*
+COPY out/ /rootfs/app/Frontend/
+RUN chown -R 1654:1654 /rootfs/app/Frontend
+
+FROM scratch
+COPY --from=filesystem /rootfs/ /
+
+ARG CIPP_VERSION
+ARG CIPP_COMMIT
+ARG BUILD_DATE
+ENV APP_UID=1654 \
+    ASPNETCORE_HTTP_PORTS=8080 \
+    DOTNET_RUNNING_IN_CONTAINER=true \
+    DOTNET_VERSION=8.0.30 \
+    ASPNET_VERSION=8.0.30 \
+    APP_VERSION=${CIPP_VERSION} \
+    COMMIT_SHA=${CIPP_COMMIT} \
+    IMAGE_TAG=liss \
+    CRAFT_VERBOSE=false \
+    LD_PRELOAD=/usr/lib/libmimalloc.so.2 \
+    MALLOC_ARENA_MAX=2 \
+    POWERSHELL_TELEMETRY_OPTOUT=1 \
+    POWERSHELL_UPDATECHECK=Off \
+    DOTNET_CLI_TELEMETRY_OPTOUT=1 \
+    DOTNET_gcServer=0 \
+    DOTNET_GCDynamicAdaptationMode=1 \
+    DOTNET_GCHeapHardLimit=0xC0000000 \
+    DOTNET_GCConserveMemory=7 \
+    ASPNETCORE_URLS=http://+:8080 \
+    BUILD_DATE=${BUILD_DATE} \
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE=true \
+    CIPPNG=true
+WORKDIR /app
+USER 1654
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "Craft.dll"]
