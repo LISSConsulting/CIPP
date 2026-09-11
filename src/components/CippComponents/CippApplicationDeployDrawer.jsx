@@ -464,6 +464,8 @@ export const CippApplicationDeployDrawer = ({
             </Grid>
             <Grid size={{ xs: 12 }}>
               <Button
+                variant="contained"
+                startIcon={<CippIcons.Search />}
                 onClick={() => {
                   searchApp(formControl.getValues('searchQuery'), 'StoreApp')
                 }}
@@ -605,6 +607,8 @@ export const CippApplicationDeployDrawer = ({
             </Grid>
             <Grid size={{ xs: 12 }}>
               <Button
+                variant="contained"
+                startIcon={<CippIcons.Search />}
                 onClick={() => {
                   searchApp(formControl.getValues('searchQuery'), 'choco')
                 }}
