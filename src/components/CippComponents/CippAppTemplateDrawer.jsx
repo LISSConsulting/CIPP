@@ -458,6 +458,9 @@ export const CippAppTemplateDrawer = ({
                     : []
                 }
                 multiple={false}
+                creatable={false}
+                openOnOptionsChange
+                optionsChangeKey={winGetSearchResults.data}
                 formControl={formControl}
                 isFetching={winGetSearchResults.isPending}
               />
@@ -533,6 +536,9 @@ export const CippAppTemplateDrawer = ({
                     : []
                 }
                 multiple={false}
+                creatable={false}
+                openOnOptionsChange
+                optionsChangeKey={ChocosearchResults.data}
                 formControl={formControl}
                 isFetching={ChocosearchResults.isPending}
               />

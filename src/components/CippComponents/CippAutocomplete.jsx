@@ -82,6 +82,8 @@ export const CippAutoComplete = React.forwardRef((props, ref) => {
     onCreateOption,
     required = false,
     isFetching = false,
+    openOnOptionsChange = false,
+    optionsChangeKey,
     sx,
     removeOptions = [],
     sortOptions = false,
@@ -119,6 +121,16 @@ export const CippAutoComplete = React.forwardRef((props, ref) => {
   const [fullObject, setFullObject] = useState(null)
   const [internalValue, setInternalValue] = useState(null) // Track selected value internally
   const [open, setOpen] = useState(false) // Control popover open state
+  const previousOptionsChangeKeyRef = useRef(optionsChangeKey)
+
+  useEffect(() => {
+    const optionsChanged = previousOptionsChangeKeyRef.current !== optionsChangeKey
+    previousOptionsChangeKeyRef.current = optionsChangeKey
+
+    if (openOnOptionsChange && optionsChangeKey != null && optionsChanged) {
+      setOpen(true)
+    }
+  }, [openOnOptionsChange, optionsChangeKey])
 
   // Sync internalValue when external value or defaultValue prop changes (e.g., when editing a form)
   useEffect(() => {

@@ -485,6 +485,9 @@ export const CippApplicationDeployDrawer = ({
                     : []
                 }
                 multiple={false}
+                creatable={false}
+                openOnOptionsChange
+                optionsChangeKey={winGetSearchResults.data}
                 formControl={formControl}
                 disabled={winGetSearchResults.isPending}
                 isFetching={winGetSearchResults.isPending}
@@ -616,6 +619,9 @@ export const CippApplicationDeployDrawer = ({
                     : []
                 }
                 multiple={false}
+                creatable={false}
+                openOnOptionsChange
+                optionsChangeKey={ChocosearchResults.data}
                 formControl={formControl}
                 isFetching={ChocosearchResults.isPending}
               />
